@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACTIVAI Rehab Dashboard</title>
+    <!-- Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom clinical font styling */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="max-w-7xl mx-auto p-6 flex flex-col md:flex-row gap-6">
+        
+        <!-- Sidebar: Patient Info -->
+        <aside class="w-full md:w-1/4 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-sm uppercase tracking-wider text-slate-500 font-semibold mb-1">Patient Profile</h2>
+            <h1 class="text-2xl font-bold text-slate-900 mb-6" id="patient-id">Loading...</h1>
+            
+            <div class="space-y-4">
+                <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <p class="text-sm text-blue-600 font-semibold">Current Progress</p>
+                    <p class="text-3xl font-bold text-blue-900" id="overall-progress">--%</p>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-500">Total Sessions</p>
+                    <p class="text-xl font-semibold" id="total-sessions">--</p>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-500">Avg EMG Quality</p>
+                    <p class="text-xl font-semibold" id="avg-emg">--</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="w-full md:w-3/4 flex flex-col gap-6">
+            
+            <!-- AI Insights Section -->
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-emerald-200 border-l-4 border-l-emerald-500">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold uppercase tracking-wide">ACTIVAI Insights</span>
+                    <h3 class="text-lg font-semibold text-slate-800">Generated Recommendations</h3>
+                </div>
+                <ul id="ai-recommendations" class="space-y-2 text-slate-700">
+                    <!-- Recommendations injected via JS -->
+                </ul>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Chart 1: Progress Over Time -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-md font-semibold text-slate-800 mb-4">Accuracy Trends</h3>
+                    <canvas id="progressChart"></canvas>
+                </div>
+
+                <!-- Chart 2: Fatigue Analysis -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-md font-semibold text-slate-800 mb-4">Fatigue Index</h3>
+                    <canvas id="fatigueChart"></canvas>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Link to your JavaScript logic -->
+    <script src="script.js"></script>
+</body>
+</html>
