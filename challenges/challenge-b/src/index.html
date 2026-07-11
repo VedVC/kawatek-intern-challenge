@@ -9,7 +9,6 @@
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom clinical font styling */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     </style>
 </head>
@@ -54,37 +53,262 @@
 
             <!-- Charts Section -->
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Chart 1: Progress Over Time -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h3 class="text-md font-semibold text-slate-800 mb-4">Accuracy Trends</h3>
+                    <h3 class="text-md font-semibold text-slate-800 mb-4">Power Grip Accuracy Trends</h3>
                     <canvas id="progressChart"></canvas>
                 </div>
-
-                <!-- Chart 2: Fatigue Analysis -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h3 class="text-md font-semibold text-slate-800 mb-4">Fatigue Index</h3>
+                    <h3 class="text-md font-semibold text-slate-800 mb-4">Power Grip Fatigue Index</h3>
                     <canvas id="fatigueChart"></canvas>
                 </div>
-
             </section>
 
-            <!-- Detailed Session Log Section (New Scrollable Area) -->
+            <!-- Detailed Session Log Section (Interactive) -->
             <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-lg font-semibold text-slate-800">Session History</h3>
                     <span class="text-sm text-slate-500">Click a session to expand</span>
                 </div>
-                
-                <!-- History Cards will be injected here via JS -->
                 <div id="session-history" class="space-y-3">
+                    <!-- History Cards injected via JS -->
                 </div>
             </section>
 
         </main>
     </div>
 
-    <!-- Link to your JavaScript logic -->
-    <script src="script.js"></script>
+    <script>
+        // Phase 1: The Provided JSON Data
+        // Embedded directly to prevent CORS errors when opening local files
+        const patientData = {
+            "patient": {
+                "id": "RYO-2027-001",
+                "name": "Patient A",
+                "age": 34,
+                "device": "RYO Hand v3.2",
+                "start_date": "2027-07-06",
+                "therapist": "Dr. Tanaka"
+            },
+            "sessions": [
+                {
+                    "session_id": 1, "date": "2027-07-06", "duration_minutes": 25, "emg_quality_score": 0.72, "overall_progress_percent": 12,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 10, "accuracy_percent": 45, "avg_response_time_ms": 520, "fatigue_index": 0.6 },
+                        { "name": "Pinch Control", "repetitions": 8, "accuracy_percent": 38, "avg_response_time_ms": 610, "fatigue_index": 0.7 }
+                    ]
+                },
+                {
+                    "session_id": 2, "date": "2027-07-08", "duration_minutes": 30, "emg_quality_score": 0.75, "overall_progress_percent": 18,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 12, "accuracy_percent": 52, "avg_response_time_ms": 480, "fatigue_index": 0.55 },
+                        { "name": "Pinch Control", "repetitions": 10, "accuracy_percent": 44, "avg_response_time_ms": 570, "fatigue_index": 0.65 },
+                        { "name": "Lateral Grip", "repetitions": 6, "accuracy_percent": 33, "avg_response_time_ms": 650, "fatigue_index": 0.72 }
+                    ]
+                },
+                {
+                    "session_id": 3, "date": "2027-07-10", "duration_minutes": 30, "emg_quality_score": 0.78, "overall_progress_percent": 25,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 15, "accuracy_percent": 61, "avg_response_time_ms": 430, "fatigue_index": 0.45 },
+                        { "name": "Pinch Control", "repetitions": 12, "accuracy_percent": 50, "avg_response_time_ms": 520, "fatigue_index": 0.58 },
+                        { "name": "Lateral Grip", "repetitions": 8, "accuracy_percent": 40, "avg_response_time_ms": 600, "fatigue_index": 0.65 }
+                    ]
+                },
+                {
+                    "session_id": 4, "date": "2027-07-13", "duration_minutes": 35, "emg_quality_score": 0.80, "overall_progress_percent": 33,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 15, "accuracy_percent": 68, "avg_response_time_ms": 390, "fatigue_index": 0.38 },
+                        { "name": "Pinch Control", "repetitions": 14, "accuracy_percent": 58, "avg_response_time_ms": 470, "fatigue_index": 0.50 },
+                        { "name": "Lateral Grip", "repetitions": 10, "accuracy_percent": 48, "avg_response_time_ms": 550, "fatigue_index": 0.58 },
+                        { "name": "Point Control", "repetitions": 5, "accuracy_percent": 30, "avg_response_time_ms": 700, "fatigue_index": 0.75 }
+                    ]
+                },
+                {
+                    "session_id": 5, "date": "2027-07-15", "duration_minutes": 35, "emg_quality_score": 0.82, "overall_progress_percent": 40,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 18, "accuracy_percent": 74, "avg_response_time_ms": 350, "fatigue_index": 0.32 },
+                        { "name": "Pinch Control", "repetitions": 15, "accuracy_percent": 63, "avg_response_time_ms": 440, "fatigue_index": 0.45 },
+                        { "name": "Lateral Grip", "repetitions": 12, "accuracy_percent": 55, "avg_response_time_ms": 500, "fatigue_index": 0.52 },
+                        { "name": "Point Control", "repetitions": 8, "accuracy_percent": 38, "avg_response_time_ms": 640, "fatigue_index": 0.68 }
+                    ]
+                },
+                {
+                    "session_id": 6, "date": "2027-07-17", "duration_minutes": 40, "emg_quality_score": 0.85, "overall_progress_percent": 48,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 20, "accuracy_percent": 78, "avg_response_time_ms": 320, "fatigue_index": 0.28 },
+                        { "name": "Pinch Control", "repetitions": 16, "accuracy_percent": 68, "avg_response_time_ms": 400, "fatigue_index": 0.40 },
+                        { "name": "Lateral Grip", "repetitions": 14, "accuracy_percent": 60, "avg_response_time_ms": 460, "fatigue_index": 0.48 },
+                        { "name": "Point Control", "repetitions": 10, "accuracy_percent": 45, "avg_response_time_ms": 580, "fatigue_index": 0.62 }
+                    ]
+                },
+                {
+                    "session_id": 7, "date": "2027-07-20", "duration_minutes": 40, "emg_quality_score": 0.87, "overall_progress_percent": 55,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 20, "accuracy_percent": 82, "avg_response_time_ms": 290, "fatigue_index": 0.25 },
+                        { "name": "Pinch Control", "repetitions": 18, "accuracy_percent": 72, "avg_response_time_ms": 370, "fatigue_index": 0.36 },
+                        { "name": "Lateral Grip", "repetitions": 15, "accuracy_percent": 65, "avg_response_time_ms": 420, "fatigue_index": 0.42 },
+                        { "name": "Point Control", "repetitions": 12, "accuracy_percent": 52, "avg_response_time_ms": 530, "fatigue_index": 0.55 }
+                    ]
+                },
+                {
+                    "session_id": 8, "date": "2027-07-22", "duration_minutes": 45, "emg_quality_score": 0.88, "overall_progress_percent": 62,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 22, "accuracy_percent": 85, "avg_response_time_ms": 270, "fatigue_index": 0.22 },
+                        { "name": "Pinch Control", "repetitions": 18, "accuracy_percent": 75, "avg_response_time_ms": 350, "fatigue_index": 0.33 },
+                        { "name": "Lateral Grip", "repetitions": 16, "accuracy_percent": 70, "avg_response_time_ms": 390, "fatigue_index": 0.38 },
+                        { "name": "Point Control", "repetitions": 14, "accuracy_percent": 58, "avg_response_time_ms": 490, "fatigue_index": 0.50 },
+                        { "name": "Combined Grip Sequence", "repetitions": 5, "accuracy_percent": 40, "avg_response_time_ms": 720, "fatigue_index": 0.78 }
+                    ]
+                },
+                {
+                    "session_id": 9, "date": "2027-07-24", "duration_minutes": 45, "emg_quality_score": 0.90, "overall_progress_percent": 68,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 22, "accuracy_percent": 88, "avg_response_time_ms": 250, "fatigue_index": 0.20 },
+                        { "name": "Pinch Control", "repetitions": 20, "accuracy_percent": 78, "avg_response_time_ms": 330, "fatigue_index": 0.30 },
+                        { "name": "Lateral Grip", "repetitions": 18, "accuracy_percent": 73, "avg_response_time_ms": 370, "fatigue_index": 0.35 },
+                        { "name": "Point Control", "repetitions": 15, "accuracy_percent": 62, "avg_response_time_ms": 450, "fatigue_index": 0.45 },
+                        { "name": "Combined Grip Sequence", "repetitions": 8, "accuracy_percent": 48, "avg_response_time_ms": 650, "fatigue_index": 0.70 }
+                    ]
+                },
+                {
+                    "session_id": 10, "date": "2027-07-27", "duration_minutes": 45, "emg_quality_score": 0.91, "overall_progress_percent": 74,
+                    "exercises": [
+                        { "name": "Power Grip Training", "repetitions": 25, "accuracy_percent": 90, "avg_response_time_ms": 230, "fatigue_index": 0.18 },
+                        { "name": "Pinch Control", "repetitions": 20, "accuracy_percent": 82, "avg_response_time_ms": 310, "fatigue_index": 0.28 },
+                        { "name": "Lateral Grip", "repetitions": 18, "accuracy_percent": 76, "avg_response_time_ms": 350, "fatigue_index": 0.32 },
+                        { "name": "Point Control", "repetitions": 16, "accuracy_percent": 67, "avg_response_time_ms": 420, "fatigue_index": 0.40 },
+                        { "name": "Combined Grip Sequence", "repetitions": 10, "accuracy_percent": 55, "avg_response_time_ms": 580, "fatigue_index": 0.62 }
+                    ]
+                }
+            ]
+        };
+
+        // Phase 2: Populate the UI Skeleton (Using updated data structure)
+        document.getElementById('patient-id').textContent = patientData.patient.id;
+        document.getElementById('total-sessions').textContent = patientData.sessions.length;
+
+        const latestSession = patientData.sessions[patientData.sessions.length - 1];
+        document.getElementById('overall-progress').textContent = `${latestSession.overall_progress_percent}%`;
+
+        const totalEmg = patientData.sessions.reduce((sum, session) => sum + session.emg_quality_score, 0);
+        const avgEmg = (totalEmg / patientData.sessions.length).toFixed(2);
+        document.getElementById('avg-emg').textContent = avgEmg;
+
+        // Phase 3: Visualize Data using Chart.js
+        const dates = patientData.sessions.map(s => s.date.split('-').slice(1).join('/')); // Format to MM/DD
+        
+        // Extract specifically the Power Grip Training data for the trend lines
+        const accuracyData = patientData.sessions.map(s => {
+            const exercise = s.exercises.find(e => e.name === "Power Grip Training") || s.exercises[0];
+            return exercise.accuracy_percent;
+        });
+        const fatigueData = patientData.sessions.map(s => {
+            const exercise = s.exercises.find(e => e.name === "Power Grip Training") || s.exercises[0];
+            return exercise.fatigue_index;
+        });
+
+        new Chart(document.getElementById('progressChart'), {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Accuracy (%)',
+                    data: accuracyData,
+                    borderColor: '#0284c7', // Tailwind sky-600
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        new Chart(document.getElementById('fatigueChart'), {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Fatigue Index',
+                    data: fatigueData,
+                    backgroundColor: '#f43f5e', // Tailwind rose-500
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Phase 4: AI Recommendations (Rule-based engine)
+        function generateRecommendations(sessions) {
+            const recommendations = [];
+            const latest = sessions[sessions.length - 1];
+            const powerGrip = latest.exercises.find(e => e.name === "Power Grip Training");
+            
+            if (powerGrip && powerGrip.accuracy_percent >= 85) {
+                recommendations.push(`🟢 <strong>High Accuracy:</strong> Power Grip accuracy reached ${powerGrip.accuracy_percent}%. Recommend increasing spring resistance on RYO bionic hand by 1 level.`);
+            }
+            if (powerGrip && powerGrip.fatigue_index > 0.4) {
+                recommendations.push(`🟠 <strong>Fatigue Alert:</strong> Neuromuscular fatigue index is elevated (${powerGrip.fatigue_index}). Monitor rest intervals closely.`);
+            }
+            if (latest.emg_quality_score >= 0.90) {
+                recommendations.push(`🔵 <strong>Signal Quality:</strong> EMG sensor contact is highly optimal (${latest.emg_quality_score}). Good baseline for complex combined gesture training.`);
+            }
+            return recommendations;
+        }
+
+        const ul = document.getElementById('ai-recommendations');
+        const insights = generateRecommendations(patientData.sessions);
+
+        insights.forEach(insight => {
+            const li = document.createElement('li');
+            li.innerHTML = insight;
+            li.className = "flex items-start gap-2 bg-slate-50 p-3 rounded border border-slate-100";
+            ul.appendChild(li);
+        });
+
+        // Phase 5: Detailed Session Log (Interactive Accordions)
+        const historyContainer = document.getElementById('session-history');
+        const reversedSessions = [...patientData.sessions].reverse();
+
+        reversedSessions.forEach((session) => {
+            const historyCard = document.createElement('div');
+            historyCard.className = "border border-slate-200 rounded-lg bg-white overflow-hidden transition-all duration-200 hover:border-blue-300";
+            
+            historyCard.innerHTML = `
+                <div class="p-4 flex justify-between items-center cursor-pointer bg-slate-50 hover:bg-blue-50 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-blue-100 text-blue-700 font-bold py-2 px-3 rounded-md text-center min-w-[60px]">
+                            ${session.date.split('-').slice(1).join('/')}
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800">Session ${session.session_id}</p>
+                            <p class="text-sm text-slate-500 font-medium">${session.duration_minutes} Min • EMG Score: ${session.emg_quality_score}</p>
+                        </div>
+                    </div>
+                    <div class="text-blue-600 font-semibold text-sm flex items-center gap-1">
+                        View Details ▾
+                    </div>
+                </div>
+                
+                <div class="hidden p-4 border-t border-slate-200 bg-white">
+                    <h4 class="text-xs uppercase tracking-wider font-bold text-slate-400 mb-3">Exercise Breakdown</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        ${session.exercises.map(ex => `
+                            <div class="bg-slate-50 p-3 rounded border border-slate-100">
+                                <p class="text-[10px] uppercase text-slate-500 font-bold mb-1 truncate" title="${ex.name}">${ex.name}</p>
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <span class="text-xl font-bold text-slate-800">${ex.accuracy_percent}%</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs text-slate-400 block">Fatigue</span>
+                                        <span class="text-sm font-bold ${ex.fatigue_index > 0.6 ? 'text-rose-600' : 'text-slate-700'}">${ex.fatigue_index}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            historyContainer.appendChild(historyCard);
+        });
+    </script>
 </body>
 </html>
